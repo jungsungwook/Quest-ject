@@ -1,12 +1,11 @@
-import { MiddlewareHandlerContext } from "$fresh/server.ts";
 import { verify } from "https://deno.land/x/djwt@v2.8/mod.ts";
 import { encoder } from "https://deno.land/x/djwt@v2.8/util.ts";
-export async function handler(
-    _req: Request,
-    ctx: MiddlewareHandlerContext,
-){
+import { Middleware } from "https://deno.land/x/oak/mod.ts";
+
+export const JwtMiddleware : Middleware = async (ctx, next) => {
     try{
-        const headers_authorization = _req.headers.get('Authorization');
+        console.log(Deno.env.get("JWT_SECRET_KEY") as string)
+        const headers_authorization = ctx.request.headers.get('Authorization');
         if(!headers_authorization) return new Response('Unauthorized', {status: 401});
 
         const token = headers_authorization.replace('Bearer ', '').replace('bearer ', '')
@@ -17,12 +16,12 @@ export async function handler(
             true,
             ["sign", "verify"],
         );
-        const payload : any = await verify(token, key);
+        const payload = await verify(token, key);
         const customId = payload.customId;
         ctx.state = {...ctx.state, customId : customId};
-        return ctx.next();
+        return next();
     }catch(e){
-        return ctx.next();
+        console.log(e)
+        return next();
     }
-    
 }

@@ -1,7 +1,9 @@
-import { Client } from "https://deno.land/x/mysql/mod.ts";
+import { Client, Connection } from "https://deno.land/x/mysql/mod.ts";
 import { Table } from "../models/dto/table.ts";
+import { INSERTDATA } from "../models/dto/orm.ts";
 
 let client: Client;
+export let tables: { [key: string]: Table } = {};
 
 export const Connect = async () => {
     try {
@@ -15,7 +17,7 @@ export const Connect = async () => {
         });
         console.log("Connected to database!");
 
-        const tables = await GetTables();
+        tables = await GetTables();
         for (const tableName in tables) {
             await TableSync(tableName, tables[tableName]);
         }
@@ -64,4 +66,30 @@ export const TableSync = async (tableName: string, table: Table) => {
         return query;
     }).join(", ")})`;
     await db.execute(query);
+}
+
+export const select = async (client: Connection, table: Table|string, where?: { [key: string]: any }, limit?: number) => {
+    const tablename = typeof table === "string" ? table : Object.keys(tables).find((key) => {
+        return tables[key] === table;
+    });
+    const query = `SELECT * FROM ${tablename} ${where ? `WHERE ${Object.keys(where).map((key) => {
+        if (typeof where[key] === "string") return `${key} = '${where[key]}'`;
+        return `${key} = ${where[key]}`;
+    }).join(" AND ")}` : ""} ${limit ? `LIMIT ${limit}` : ""}`;
+    const query_result = await client.execute(query);
+    if(!limit) return query_result.rows;
+    else if(limit === 1) return query_result.rows![0];
+}
+
+export const insert = async (client: Connection, table: Table|string, data: INSERTDATA) => {
+    const tablename = typeof table === "string" ? table : Object.keys(tables).find((key) => {
+        return tables[key] === table;
+    });
+    const query = `INSERT INTO ${tablename} (${Object.keys(data).map((key) => {
+        return key;
+    }).join(", ")}) VALUES (${Object.keys(data).map((key) => {
+        if (typeof data[key] === "string") return `'${data[key]}'`;
+        return data[key];
+    }).join(", ")})`;
+    await client.execute(query); 
 }

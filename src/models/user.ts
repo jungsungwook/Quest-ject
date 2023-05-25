@@ -1,7 +1,10 @@
-import { GetDatabase } from "../utils/database.ts";
+import { Connection } from "https://deno.land/x/mysql/mod.ts";
+import { insert, select } from "../utils/database.ts";
 import { Table } from "./dto/table.ts";
+import { AuthSignUp } from "../auth/dto/auth-sign.ts";
+import * as bcrypt from "https://deno.land/x/bcrypt/mod.ts";
 export const TABLENAME = "user";
-export const TABLE : Table = {
+export const TABLE: Table = {
     id: {
         name: "id",
         type: "int",
@@ -38,7 +41,8 @@ export const TABLE : Table = {
         name: "role",
         type: "int",
         length: 11,
-        default: 0,
+        default: '0',
+        notNull: true,
     },
     refreshToken: {
         name: "refreshToken",
@@ -66,6 +70,39 @@ export const TABLE : Table = {
         name: "isDeleted",
         type: "tinyint",
         length: 4,
-        default: 0,
+        default: '0',
+        notNull: true,
     },
+}
+export default class UserRepository {
+    async createUser(client: Connection, body: AuthSignUp) {
+        const { customId, name, email, password } = body;
+
+        const salt = await bcrypt.genSalt();
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        const user = {
+            customId,
+            name,
+            email,
+            password: hashedPassword,
+        }
+
+        const result = await insert(client, TABLENAME, user);
+        return result;
+    }
+
+    async getUser(client: Connection, customId: string) {
+        const result = await select(client, TABLENAME, {
+            "customId": customId,
+            "isDeleted": 0,
+        }, 1);
+        return result;
+    }
+
+    async passwordCheck(client: Connection, customId: string, password: string) {
+        const user = await this.getUser(client, customId);
+        const isPasswordCorrect = await bcrypt.compare(password, user.password);
+        return isPasswordCorrect;
+    }
 }

@@ -21,5 +21,9 @@
         JWT 기반 인증 시스템으로 Header에서 Authorization 값을 불러와 토큰값이 유효한 경우 User 객체를 ctx.state값에 넣어 반환함.
         만약 유효하지 않은 경우 throw error 없이 패스.
 
+    2. Transaction미들웨어
+
+        여러번의 DB 커밋이 발생할 경우 도중에 Exception으로 인한 이슈를 방지하고자 Transaction를 전역에 등록하여 커밋을 Rollback할 수 있도록 하였습니다.
+
 ## Todo.
 ***

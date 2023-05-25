@@ -4,7 +4,6 @@ import { Middleware } from "https://deno.land/x/oak/mod.ts";
 
 export const JwtMiddleware : Middleware = async (ctx, next) => {
     try{
-        console.log(Deno.env.get("JWT_SECRET_KEY") as string)
         const headers_authorization = ctx.request.headers.get('Authorization');
         if(!headers_authorization) return new Response('Unauthorized', {status: 401});
 
@@ -21,7 +20,6 @@ export const JwtMiddleware : Middleware = async (ctx, next) => {
         ctx.state = {...ctx.state, customId : customId};
         return next();
     }catch(e){
-        console.log(e)
         return next();
     }
 }

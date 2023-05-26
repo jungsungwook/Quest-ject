@@ -2,6 +2,7 @@ import { Application } from "https://deno.land/x/oak/mod.ts";
 import "https://deno.land/x/dotenv/load.ts";
 import router from "./routes.ts";
 import { Connect } from "./utils/database.ts";
+import { oakCors } from "https://deno.land/x/cors/mod.ts";
 
 await Connect();
 const app = new Application();
@@ -17,7 +18,9 @@ app.use(async (ctx, next) => {
     await next();
 });
 
+app.use(oakCors());
 app.use(router.routes());
 app.use(router.allowedMethods());
+
 
 app.listen({ port: Deno.env.get("PORT") as unknown as number || 8000 });

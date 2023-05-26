@@ -1,8 +1,10 @@
 import { Router } from "https://deno.land/x/oak/mod.ts";
-import { AuthRouter } from "./auth/auth.controller.ts";
-
+import apiRouter from "./api/api.routes.ts"
+import pageRouter from "./pages/pages.routes.ts";
 const router = new Router();
-// middleware
-router.use("/auth", AuthRouter.routes(), AuthRouter.allowedMethods());
+
+router.use("/", pageRouter.routes(), pageRouter.allowedMethods());
+
+router.use("/api", apiRouter.routes(), apiRouter.allowedMethods());
 
 export default router;

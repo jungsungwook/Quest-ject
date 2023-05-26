@@ -93,3 +93,17 @@ export const insert = async (client: Connection, table: Table|string, data: INSE
     }).join(", ")})`;
     await client.execute(query); 
 }
+
+export const update = async (client: Connection, table: Table|string, data: INSERTDATA, where: { [key: string]: any }) => {
+    const tablename = typeof table === "string" ? table : Object.keys(tables).find((key) => {
+        return tables[key] === table;
+    });
+    const query = `UPDATE ${tablename} SET ${Object.keys(data).map((key) => {
+        if (typeof data[key] === "string") return `${key} = '${data[key]}'`;
+        return `${key} = ${data[key]}`;
+    }).join(", ")} WHERE ${Object.keys(where).map((key) => {
+        if (typeof where[key] === "string") return `${key} = '${where[key]}'`;
+        return `${key} = ${where[key]}`;
+    }).join(" AND ")}`;
+    await client.execute(query); 
+}

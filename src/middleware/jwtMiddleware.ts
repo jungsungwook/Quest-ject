@@ -5,8 +5,7 @@ import { Middleware } from "https://deno.land/x/oak/mod.ts";
 export const JwtMiddleware : Middleware = async (ctx, next) => {
     try{
         const headers_authorization = ctx.request.headers.get('Authorization');
-        if(!headers_authorization) return new Response('Unauthorized', {status: 401});
-
+        if(!headers_authorization) throw new Error("Authorization Header Not Found");
         const token = headers_authorization.replace('Bearer ', '').replace('bearer ', '')
         const key = await crypto.subtle.importKey(
             "raw",

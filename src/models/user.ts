@@ -1,7 +1,7 @@
 import { Connection } from "https://deno.land/x/mysql/mod.ts";
-import { insert, select } from "../utils/database.ts";
+import { insert, select, update } from "../utils/database.ts";
 import { Table } from "./dto/table.ts";
-import { AuthSignUp } from "../auth/dto/auth-sign.ts";
+import { AuthSignUp } from "../api/auth/dto/auth-sign.ts";
 import * as bcrypt from "https://deno.land/x/bcrypt/mod.ts";
 export const TABLENAME = "user";
 export const TABLE: Table = {
@@ -92,7 +92,7 @@ export default class UserRepository {
         return result;
     }
 
-    async getUser(client: Connection, customId: string) {
+    async getUserByCustomId(client: Connection, customId: string) {
         const result = await select(client, TABLENAME, {
             "customId": customId,
             "isDeleted": 0,
@@ -100,8 +100,25 @@ export default class UserRepository {
         return result;
     }
 
+    async getUserByEmail(client: Connection, email: string) {
+        const user = await select(client, TABLENAME, {
+            "email": email,
+            "isDeleted": 0,
+        }, 1);
+        return user;
+    }
+    
+    async setUserRefreshToken(client: Connection, customId: string, refreshToken: string) {
+        const result = await update(client, TABLENAME, {
+            "refreshToken": refreshToken,
+        }, {
+            "customId": customId,
+        });
+        return result;
+    }
+
     async passwordCheck(client: Connection, customId: string, password: string) {
-        const user = await this.getUser(client, customId);
+        const user = await this.getUserByCustomId(client, customId);
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
         return isPasswordCorrect;
     }

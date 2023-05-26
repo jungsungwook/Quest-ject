@@ -11,6 +11,19 @@ AuthRouter.use(JwtMiddleware);
 AuthRouter
     .post('/signin', async (ctx) => {
         try{
+            if(ctx.state.customId){
+                const client: Client = await GetDatabase();
+                const result = await client.transaction(async (conn) => {
+                    const user = await authService.signInByAccessToken(conn, ctx.state.customId);
+                    return user;
+                });
+                ctx.response.body = {
+                    statusCode : 200,
+                    content : result
+                };
+                ctx.response.status = 200;
+                return;
+            }
             const body: AuthSignUp = await ctx.request.body().value;
             const client: Client = await GetDatabase();
             const result = await client.transaction(async (conn) => {

@@ -79,4 +79,44 @@ export default class AuthService {
         const result = await userRepository.setUserRefreshToken(client, customId, refreshToken);
         return result;
     }
+
+    async signInByAccessToken(client: Connection, customId: string) {
+        const user = await userRepository.getUserByCustomId(client, customId);
+        if (user) {
+            const acesspayload = {
+                customId: user.customId,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                exp: Math.floor(Date.now() / 1000) + (Deno.env.get("JWT_ACCESS_TOKEN_EXPIRES") as unknown as number | 60 * 60 * 12),
+            };
+            const refreshpayload = {
+                customId: user.customId,
+                exp: Math.floor(Date.now() / 1000) + (Deno.env.get("JWT_REFRESH_TOKEN_EXPIRES") as unknown as number | 60 * 60 * 24 * 7),
+            };
+            const acesskey = await crypto.subtle.importKey(
+                "raw",
+                encoder.encode(Deno.env.get("JWT_SECRET_KEY") as string),
+                { name: "HMAC", hash: "SHA-512" },
+                true,
+                ["sign", "verify"],
+            );
+            const refreshkey = await crypto.subtle.importKey(
+                "raw",
+                encoder.encode(Deno.env.get("JWT_REFRESH_KEY") as string),
+                { name: "HMAC", hash: "SHA-512" },
+                true,
+                ["sign", "verify"],
+            );
+            const accessToken = await create({ alg: "HS512", typ: "JWT" }, acesspayload, acesskey);
+            const refreshToken = await create({ alg: "HS512", typ: "JWT" }, refreshpayload, refreshkey);
+            await this.setUserRefreshToken(client, user.customId, refreshToken);
+            return {
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            };
+        }else {
+            throw createHttpError(401, "잘못된 접근입니다.");
+        }
+    }
 }

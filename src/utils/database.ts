@@ -107,3 +107,25 @@ export const update = async (client: Connection, table: Table|string, data: INSE
     }).join(" AND ")}`;
     await client.execute(query); 
 }
+
+export const softDelete = async (client: Connection, table: Table|string, where: { [key: string]: any }) => {
+    const tablename = typeof table === "string" ? table : Object.keys(tables).find((key) => {
+        return tables[key] === table;
+    });
+    const query = `UPDATE ${tablename} SET isDeleted = true, deletedAt = CURRENT_TIMESTAMP WHERE ${Object.keys(where).map((key) => {
+        if (typeof where[key] === "string") return `${key} = '${where[key]}'`;
+        return `${key} = ${where[key]}`;
+    }).join(" AND ")}`;
+    await client.execute(query); 
+}
+
+export const hardDelete = async (client: Connection, table: Table|string, where: { [key: string]: any }) => {
+    const tablename = typeof table === "string" ? table : Object.keys(tables).find((key) => {
+        return tables[key] === table;
+    });
+    const query = `DELETE FROM ${tablename} WHERE ${Object.keys(where).map((key) => {
+        if (typeof where[key] === "string") return `${key} = '${where[key]}'`;
+        return `${key} = ${where[key]}`;
+    }).join(" AND ")}`;
+    await client.execute(query); 
+}

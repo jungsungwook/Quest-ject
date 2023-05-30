@@ -214,22 +214,6 @@
     "https://deno.land/x/oak@v12.5.0/types.d.ts": "bca5f38683ca2bb2b1ec841324a3c2e1c468e734151c9526af61c9257b016aca",
     "https://deno.land/x/oak@v12.5.0/util.ts": "0a3fdffb114859c2de84e1783efa3a544af4d2af8c6f08e0d25655de9d3e69bb",
     "https://deno.land/x/path_to_regexp@v6.2.1/index.ts": "894060567837bae8fc9c5cbd4d0a05e9024672083d5883b525c031eea940e556",
-    "https://deno.land/x/sql_builder@v1.9.1/util.ts": "b9855dc435972704cf82655019f4ec168ac83550ab4db596c5f6b6d201466384",
-    "https://dev.jspm.io/npm:object-assign@4!cjs": "b19fbacc33f0ed8b8b4f8f7d0361a0546f4a5b946c3313fe9d36f4e599ecc41e",
-    "https://dev.jspm.io/npm:object-assign@4.1.1!cjs": "6da711649ed78e03ebae561088386c8ece0fcc1c8da2b2f32de6515d30ac1db6",
-    "https://dev.jspm.io/npm:prop-types@15.8.1/_/cc27f2db.js": "8f7e770d367a5b709589a401650496f626a020636014f2fdd6e4dd509ad49e78",
-    "https://dev.jspm.io/npm:prop-types@15/checkPropTypes!cjs": "e9a4e1411e8522fae9584c2a19b799f1e9c86a1f6d92afac36db0063b34df9e1",
-    "https://dev.jspm.io/npm:react-dom@16.14.0/cjs/react-dom-server.browser.development.js!cjs": "b30c8c3780ede8e1e972e06c36fee9907bfc6863352592dfc63f7d881d38a12d",
-    "https://dev.jspm.io/npm:react@16!cjs": "3d25711f9d843ed668d7566a171565c1567331acb60f6d555615f4fdbb42206e",
-    "https://dev.jspm.io/npm:react@16.14.0!cjs": "ebb4dbffab9ca87eb9c32036f70b40932747669d9615d77c80293b743cc755c4",
-    "https://dev.jspm.io/npm:react@16.14.0/cjs/react.development.js!cjs": "c9a5f57b27559a9cd124a3fcdb8243464078f0cfe070eb92dbaaa49f970b7df2",
-    "https://dev.jspm.io/react-dom@16.14.0/server": "1f815558f7ee7c4a27c9727d6521e450d46dcfe48c8fa6028f68c81a9159dc68",
-    "https://jspm.dev/npm:object-assign@4!cjs": "b19fbacc33f0ed8b8b4f8f7d0361a0546f4a5b946c3313fe9d36f4e599ecc41e",
-    "https://jspm.dev/npm:object-assign@4.1.1!cjs": "6da711649ed78e03ebae561088386c8ece0fcc1c8da2b2f32de6515d30ac1db6",
-    "https://jspm.dev/npm:prop-types@15.8.1/_/cc27f2db.js": "8f7e770d367a5b709589a401650496f626a020636014f2fdd6e4dd509ad49e78",
-    "https://jspm.dev/npm:prop-types@15/checkPropTypes!cjs": "e9a4e1411e8522fae9584c2a19b799f1e9c86a1f6d92afac36db0063b34df9e1",
-    "https://jspm.dev/npm:react@16.14.0!cjs": "ebb4dbffab9ca87eb9c32036f70b40932747669d9615d77c80293b743cc755c4",
-    "https://jspm.dev/npm:react@16.14.0/cjs/react.development.js!cjs": "c9a5f57b27559a9cd124a3fcdb8243464078f0cfe070eb92dbaaa49f970b7df2",
-    "https://jspm.dev/react@16.14.0": "3d25711f9d843ed668d7566a171565c1567331acb60f6d555615f4fdbb42206e"
+    "https://deno.land/x/sql_builder@v1.9.1/util.ts": "b9855dc435972704cf82655019f4ec168ac83550ab4db596c5f6b6d201466384"
   }
 }
